@@ -541,7 +541,7 @@ namespace System.Windows.Forms
                 {
                     State = State & ~DataGridViewElementStates.ReadOnly;
                 }
-                
+
                 DataGridView?.OnDataGridViewElementStateChanged(this, -1, DataGridViewElementStates.ReadOnly);
             }
         }
@@ -2086,6 +2086,10 @@ namespace System.Windows.Forms
                 else if (columnStyle != null && !columnStyle.ForeColor.IsEmpty)
                 {
                     inheritedCellStyleTmp.ForeColor = columnStyle.ForeColor;
+                }
+                else if (this is DataGridViewButtonCell && !DataGridView.IsDefaultCellStyleChanged)
+                {
+                    inheritedCellStyleTmp.ForeColor = DataGridView.DefaultButtonCellForeColor;
                 }
                 else
                 {
@@ -4589,7 +4593,7 @@ namespace System.Windows.Forms
                     {
                         throw new InvalidOperationException(SR.DataGridViewCellAccessibleObject_OwnerNotSet);
                     }
-                    
+
                     return owner.OwningRow?.AccessibilityObject;
                 }
             }

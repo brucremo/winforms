@@ -2278,6 +2278,8 @@ namespace System.Windows.Forms
             }
         }
 
+        internal Color DefaultButtonCellForeColor => base.ForeColor;
+
         [
             SRCategory(nameof(SR.CatAppearance)),
             SRDescription(nameof(SR.DataGridView_DefaultCellStyleDescr)),
@@ -2367,7 +2369,7 @@ namespace System.Windows.Forms
                 DataGridViewCellStyle defaultCellStyle = new DataGridViewCellStyle
                 {
                     BackColor = DefaultBackBrush.Color,
-                    ForeColor = base.ForeColor,
+                    ForeColor = DefaultForeBrush.Color,
                     SelectionBackColor = DefaultSelectionBackBrush.Color,
                     SelectionForeColor = DefaultSelectionForeBrush.Color,
                     Font = base.Font,
@@ -3422,6 +3424,11 @@ namespace System.Windows.Forms
                 }
             }
         }
+
+        /// <summary>
+        /// Indicates whether a style has been changed by a customer.
+        /// </summary>
+        internal bool IsDefaultCellStyleChanged { get; private set; }
 
         private bool IsEscapeKeyEffective
         {
