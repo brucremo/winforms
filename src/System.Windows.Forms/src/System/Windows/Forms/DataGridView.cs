@@ -3114,6 +3114,15 @@ namespace System.Windows.Forms
             }
         }
 
+        /// <summary>
+        ///  Stores system color for High Contrast themes. 
+        ///  HC #1: white
+        ///  HC #2: white
+        ///  HC Black: white
+        ///  HC White: light gray
+        /// </summary>
+        private static SolidBrush HighContrastBackgroundBrush => (SolidBrush)SystemBrushes.ControlLight;
+
         internal int HorizontalOffset
         {
             get

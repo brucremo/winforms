@@ -10088,6 +10088,8 @@ namespace System.Windows.Forms
             }
         }
 
+        private bool IsBackgroundColorChanged { get; set; }
+
         private bool IsColumnOutOfBounds(int columnIndex)
         {
             return columnIndex >= Columns.Count || columnIndex == -1;
@@ -11392,6 +11394,8 @@ namespace System.Windows.Forms
 
         protected virtual void OnBackgroundColorChanged(EventArgs e)
         {
+            IsBackgroundColorChanged = true;
+
             InvalidateInside();
 
             if (Events[EVENT_DATAGRIDVIEWBACKGROUNDCOLORCHANGED] is EventHandler eh && !dataGridViewOper[DATAGRIDVIEWOPER_inDispose] && !IsDisposed)
@@ -19345,11 +19349,21 @@ namespace System.Windows.Forms
                 rcBelowRows.Height--;
             }
 
+            SolidBrush backgroundBrushTmp = backgroundBrush;
+
+            if (!IsBackgroundColorChanged && SystemInformation.HighContrast && backgroundBrushTmp.Color.ToArgb().Equals(Color.Black.ToArgb()))
+            {
+                // HC #1 and HC Black themes have black background color by default. 
+                // For contrast, it needs to change HC #1 and HC Black background color to 
+                // white like as in HC #2 if BackgroundColor property is not changed by a customer.
+                backgroundBrushTmp = HighContrastBackgroundBrush;
+            }
+
             rcBelowRows.Y += visibleRowsHeight;
             rcBelowRows.Height -= visibleRowsHeight;
             if (rcBelowRows.Width > 0 && rcBelowRows.Height > 0)
             {
-                graphics.FillRectangle(backgroundBrush, rcBelowRows);
+                graphics.FillRectangle(backgroundBrushTmp, rcBelowRows);
             }
 
             // Paint potential block next to column headers and rows
@@ -19387,7 +19401,7 @@ namespace System.Windows.Forms
             }
             if (rcNextRows.Width > 0 && rcNextRows.Height > 0)
             {
-                graphics.FillRectangle(backgroundBrush, rcNextRows);
+                graphics.FillRectangle(backgroundBrushTmp, rcNextRows);
             }
         }
 
